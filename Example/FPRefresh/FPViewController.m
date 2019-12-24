@@ -27,7 +27,7 @@
     //配置刷新行为
     self.tableView.headerCanRefresh = YES;
     self.tableView.foorterCanRefresh = YES;
-    self.tableView.pageSize = 2;
+    self.tableView.pageSize = 10;
     self.tableView.pageNumber = 1;
     
     self.tableView.refreshBlock = ^(RefreshType type) {
@@ -51,15 +51,17 @@
         NSLog(@"%@=%@\r\n",key,obj);
     }];
     
-    
+    MJWeakSelf
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSMutableArray *datas = [NSMutableArray array];
         if (self.tableView.pageNumber < 4) {
-            for (int i = 0; i < 3; i ++) {
+            for (int i = 0; i < weakSelf.tableView.pageSize ; i ++) {
                 [datas addObject:@""];
             }
         }else{
-            [datas addObject:@""];
+            for (int i = 0; i < weakSelf.tableView.pageSize - 1; i ++) {
+                [datas addObject:@""];
+            }
         }
         
         if (self.tableView.headerIsRefreshing) {
