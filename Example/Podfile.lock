@@ -1,0 +1,26 @@
+PODS:
+  - FPRefresh (0.1.0):
+    - FPRefresh/Refresh (= 0.1.0)
+    - MJRefresh
+  - FPRefresh/Refresh (0.1.0):
+    - MJRefresh
+  - MJRefresh (3.3.1)
+
+DEPENDENCIES:
+  - FPRefresh (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - MJRefresh
+
+EXTERNAL SOURCES:
+  FPRefresh:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FPRefresh: 5279e484f800420c15ce7056a03ed3378a124bfb
+  MJRefresh: eeda70fbf0ad277f3178cef1cd0c3532591d6237
+
+PODFILE CHECKSUM: 6cbbef62ae27aa8371cd4c3554e144cf33cd8a0a
+
+COCOAPODS: 1.8.4

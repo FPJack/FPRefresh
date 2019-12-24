@@ -19,6 +19,29 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'FPRefresh'
 ```
+## 基于MJRefresh对UIScrollView添加了一个简单的刷新分类，自动维护页码和数据是否加载完毕
+ 配置刷新&结束刷新
+```ruby
+  self.tableView.headerCanRefresh = YES;
+  self.tableView.foorterCanRefresh = YES;
+  self.tableView.pageSize = 2;
+  self.tableView.pageNumber = 1;
+  
+  self.tableView.refreshBlock = ^(RefreshType type) {
+      //下啦刷新&上啦加载回调
+      [weakSelf loadNetData];
+  };
+  
+  //强制下拉刷新
+  [self.tableView begin_Refreshing];
+  
+  //网络请求正常结束刷新
+  [self.tableView end_Refresh];
+  
+  //网络请求失败结束刷新
+  [self.tableView endError_Refresh];
+```
+
 
 ## Author
 
