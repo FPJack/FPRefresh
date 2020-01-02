@@ -38,6 +38,8 @@ static const char FPHeaderCanRefreshKey = '\0';
     if (headerCanRefresh) {
         MJRefreshNormalHeader *mjHeader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(header_Refresh)];
         self.mj_header = mjHeader;
+    }else{
+        self.mj_header = nil;
     }
     objc_setAssociatedObject(self, &FPHeaderCanRefreshKey,
                              @(headerCanRefresh), OBJC_ASSOCIATION_RETAIN);
@@ -55,6 +57,8 @@ static const char FPFooterCanRefreshKey = '\0';
         footer.stateLabel.font = [UIFont systemFontOfSize:12];
         [footer setTitle:@"没有更多啦" forState:MJRefreshStateNoMoreData];
         self.mj_footer = footer;
+    }else{
+        self.mj_footer = nil;
     }
     
     objc_setAssociatedObject(self, &FPFooterCanRefreshKey,
