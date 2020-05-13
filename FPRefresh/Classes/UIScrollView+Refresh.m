@@ -7,7 +7,6 @@
 //
 
 #import "UIScrollView+Refresh.h"
-#import <MJRefresh/MJRefresh.h>
 NS_ASSUME_NONNULL_BEGIN
 @interface UIScrollView ()
 @property(nonatomic,assign)NSInteger total_count;
@@ -15,6 +14,28 @@ NS_ASSUME_NONNULL_BEGIN
 NS_ASSUME_NONNULL_END
 @implementation UIScrollView (Refresh)
 #pragma mark - refreshBlock
+static const char FPRefreshHeaderBlockKey = '\0';
+- (void)setHeaderBlock:(MJRefreshHeader * _Nonnull (^)(MJRefreshComponentAction _Nonnull))headerBlock{
+    if (!headerBlock) return;
+    objc_setAssociatedObject(self, &FPRefreshHeaderBlockKey,
+                             headerBlock, OBJC_ASSOCIATION_COPY);
+
+}
+- (MJRefreshHeader * _Nonnull (^)(MJRefreshComponentAction _Nonnull))headerBlock{
+    return objc_getAssociatedObject(self, &FPRefreshHeaderBlockKey);
+
+}
+static const char FPRefreshFooterBlockKey = '\0';
+- (void)setFooterBlock:(MJRefreshFooter * _Nonnull (^)(MJRefreshComponentAction _Nonnull))footerBlock{
+    if (!footerBlock) return;
+    objc_setAssociatedObject(self, &FPRefreshFooterBlockKey,
+                             footerBlock, OBJC_ASSOCIATION_COPY);
+
+}
+- (MJRefreshFooter * _Nonnull (^)(MJRefreshComponentAction _Nonnull))footerBlock{
+    return objc_getAssociatedObject(self, &FPRefreshFooterBlockKey);
+
+}
 static const char FPRefreshBlockKey = '\0';
 - (void)setRefreshBlock:(void (^)(RefreshType))refreshBlock{
     objc_setAssociatedObject(self, &FPRefreshBlockKey,
@@ -36,8 +57,20 @@ static const char FPRefreshDelegateKey = '\0';
 static const char FPHeaderCanRefreshKey = '\0';
 - (void)setHeaderCanRefresh:(BOOL)headerCanRefresh{
     if (headerCanRefresh) {
-        MJRefreshNormalHeader *mjHeader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(header_Refresh)];
-        self.mj_header = mjHeader;
+        if (self.headerBlock) {
+            MJWeakSelf
+            self.mj_header = self.headerBlock(^{
+                [weakSelf header_Refresh];
+            });
+        }else if (FPRefreshConfigure.share.headerBlock) {
+            MJWeakSelf
+            self.mj_header = FPRefreshConfigure.share.headerBlock(^{
+                [weakSelf header_Refresh];
+            });
+        }else{
+            MJRefreshNormalHeader *mjHeader = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(header_Refresh)];
+            self.mj_header = mjHeader;
+        }
     }else{
         self.mj_header = nil;
     }
@@ -53,10 +86,22 @@ static const char FPFooterCanRefreshKey = '\0';
 - (void)setFoorterCanRefresh:(BOOL)foorterCanRefresh{
     if (foorterCanRefresh) {
         self.currentCount = - 100;
-        MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footer_Refresh)];
-        footer.stateLabel.font = [UIFont systemFontOfSize:12];
-        [footer setTitle:@"没有更多啦" forState:MJRefreshStateNoMoreData];
-        self.mj_footer = footer;
+        if (self.footerBlock) {
+            MJWeakSelf
+            self.mj_footer = self.footerBlock(^{
+                [weakSelf footer_Refresh];
+            });
+        }else if (FPRefreshConfigure.share.footerBlock) {
+            MJWeakSelf
+            self.mj_footer = FPRefreshConfigure.share.footerBlock(^{
+                [weakSelf footer_Refresh];
+            });
+        }else{
+            MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(footer_Refresh)];
+            footer.stateLabel.font = [UIFont systemFontOfSize:12];
+            [footer setTitle:@"没有更多啦" forState:MJRefreshStateNoMoreData];
+            self.mj_footer = footer;
+        }
     }else{
         self.mj_footer = nil;
     }
@@ -172,5 +217,15 @@ static const char FPTotalCount = '\0';
         }
     }
     return totalCount;
+}
+@end
+@implementation FPRefreshConfigure
++(instancetype)share{
+    static dispatch_once_t onceToken;
+    static FPRefreshConfigure *instance;
+    dispatch_once(&onceToken, ^{
+        instance = [FPRefreshConfigure new];
+    });
+    return instance;;
 }
 @end

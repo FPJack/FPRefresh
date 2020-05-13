@@ -10,6 +10,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import <MJRefresh/MJRefresh.h>
 typedef NS_ENUM(NSInteger, RefreshType) {
     RefreshTypeHeader, //头部刷新
     RefreshTypeFooter//尾部刷新
@@ -23,6 +24,11 @@ NS_ASSUME_NONNULL_END
 
 NS_ASSUME_NONNULL_BEGIN
 @interface UIScrollView (Refresh)
+//需要自定义头尾刷新控件时外部自己创建头尾控件
+@property (nonatomic,copy)MJRefreshHeader*(^headerBlock)(MJRefreshComponentAction block);
+@property (nonatomic,copy)MJRefreshFooter*(^footerBlock)(MJRefreshComponentAction block);
+
+
 //刷新回调可以代理&block二选择一
 @property (nonatomic,assign) id<RefreshProtocal> refreshDelegate;
 @property (nonatomic,copy)void (^refreshBlock)(RefreshType type);
@@ -40,4 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)endError_Refresh;
 @end
 
+NS_ASSUME_NONNULL_END
+
+@class MJRefreshHeader,MJRefreshFooter;
+
+NS_ASSUME_NONNULL_BEGIN
+@interface FPRefreshConfigure : NSObject
+@property (nonatomic,copy)MJRefreshHeader*(^headerBlock)(MJRefreshComponentAction block);
+@property (nonatomic,copy)MJRefreshFooter*(^footerBlock)(MJRefreshComponentAction block);
++(instancetype)share;
+@end
 NS_ASSUME_NONNULL_END
