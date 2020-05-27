@@ -48,8 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-@class MJRefreshHeader,MJRefreshFooter;
-
 NS_ASSUME_NONNULL_BEGIN
 @interface FPRefreshConfigure : NSObject
 @property (nonatomic,copy)MJRefreshHeader*(^headerBlock)(MJRefreshComponentAction block);

@@ -48,7 +48,7 @@ static const char FPRefreshBlockKey = '\0';
 static const char FPRefreshDelegateKey = '\0';
 - (void)setRefreshDelegate:(id<RefreshProtocal>)refreshDelegate{
     objc_setAssociatedObject(self, &FPRefreshDelegateKey,
-                             refreshDelegate, OBJC_ASSOCIATION_RETAIN);
+                             refreshDelegate, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (id<RefreshProtocal>)refreshDelegate{
     return objc_getAssociatedObject(self, &FPRefreshDelegateKey);
@@ -75,7 +75,7 @@ static const char FPHeaderCanRefreshKey = '\0';
         self.mj_header = nil;
     }
     objc_setAssociatedObject(self, &FPHeaderCanRefreshKey,
-                             @(headerCanRefresh), OBJC_ASSOCIATION_RETAIN);
+                             @(headerCanRefresh), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (BOOL)headerCanRefresh{
     NSNumber *canRefresh = (NSNumber*)objc_getAssociatedObject(self, &FPHeaderCanRefreshKey);
@@ -107,7 +107,7 @@ static const char FPFooterCanRefreshKey = '\0';
     }
     
     objc_setAssociatedObject(self, &FPFooterCanRefreshKey,
-                             @(foorterCanRefresh), OBJC_ASSOCIATION_RETAIN);
+                             @(foorterCanRefresh), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (BOOL)foorterCanRefresh{
     NSNumber *canRefresh = (NSNumber*)objc_getAssociatedObject(self, &FPFooterCanRefreshKey);
@@ -117,7 +117,7 @@ static const char FPFooterCanRefreshKey = '\0';
 static const char FPPageSizeKey = '\0';
 - (void)setPageSize:(NSInteger)pageSize{
     objc_setAssociatedObject(self, &FPPageSizeKey,
-                             @(pageSize), OBJC_ASSOCIATION_RETAIN);
+                             @(pageSize), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (NSInteger)pageSize{
     NSNumber *pageSize = (NSNumber*)objc_getAssociatedObject(self, &FPPageSizeKey);
@@ -127,7 +127,7 @@ static const char FPPageSizeKey = '\0';
 static const char FPCurrentCountKey = '\0';
 - (void)setCurrentCount:(NSInteger)currentCount{
     objc_setAssociatedObject(self, &FPCurrentCountKey,
-                             @(currentCount), OBJC_ASSOCIATION_RETAIN);
+                             @(currentCount), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (NSInteger)currentCount{
     NSNumber *currentCount = (NSNumber*)objc_getAssociatedObject(self, &FPCurrentCountKey);
@@ -138,7 +138,7 @@ static const char FPCurrentCountKey = '\0';
 static const char FPPageNumberKey = '\0';
 - (void)setPageNumber:(NSInteger)pageNumber{
     objc_setAssociatedObject(self, &FPPageNumberKey,
-                             @(pageNumber), OBJC_ASSOCIATION_RETAIN);
+                             @(pageNumber), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (NSInteger)pageNumber{
     NSNumber *pageNumber = (NSNumber*)objc_getAssociatedObject(self, &FPPageNumberKey);
@@ -148,7 +148,7 @@ static const char FPPageNumberKey = '\0';
 static const char FPTotalCount = '\0';
 - (void)setTotal_count:(NSInteger)total_count{
     objc_setAssociatedObject(self, &FPTotalCount,
-                             @(total_count), OBJC_ASSOCIATION_RETAIN);
+                             @(total_count), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 - (NSInteger)total_count{
     NSNumber *count = (NSNumber*)objc_getAssociatedObject(self, &FPTotalCount);
@@ -179,9 +179,9 @@ static const char FPTotalCount = '\0';
     if (self.headerIsRefreshing) {
         [self.mj_header endRefreshing];
         self.total_count = 0;
-        if (self.foorterCanRefresh && self.mj_footer.state == MJRefreshStateNoMoreData) {
-            [self.mj_footer resetNoMoreData];
-        }
+//        if (self.foorterCanRefresh && self.mj_footer.state == MJRefreshStateNoMoreData) {
+//            [self.mj_footer resetNoMoreData];
+//        }
     }
     
     if (self.foorterCanRefresh) {
